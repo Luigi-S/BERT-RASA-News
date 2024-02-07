@@ -1,0 +1,255 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+
+# ------------------------------------------------
+#             = = = WEATHER = = =
+# ------------------------------------------------
+
+- intent: weather_no_place
+  examples: |
+      - what's the weather like [today](when)?
+      - can you tell me the forecast for [tomorrow](when)?
+      - i need to know if it will rain [on the 12th](when)
+      - what's the temperature?
+      - is it going to be sunny in the [afternoon](when)?
+      - tell me about the weather
+      - will it snow [next week](when)?
+      - can you give me the weather report for [thursday](when)?
+      - is there a chance of thunderstorms?
+      - i'm planning an outdoor event, should i expect rain
+
+- intent: weather
+  examples: |
+      - what's the weather in [nebraska](where) going to be like for the [next few days](when)?
+      - can you provide a detailed weather forecast for [this week](when) in [Naples](where)?
+      - i'm traveling to [miami](where) [next month](when), what's the climate like there?
+      - what's the uv index for [today](when) in [Paris]?
+      - im in [greece](where), will it be windy [this evening](when)?
+      - is there a chance of fog [in the morning](where)?
+      - can you give me an overview of the weather conditions in [europe](where)?
+      - is it raining [today](when) in [hong kong](where)?
+
+
+# ------------------------------------------------
+#             = = = GENERICS = = =
+# ------------------------------------------------
+
+- intent: generic_news
+  examples: |
+      - can you give me the latest headlines?
+      - i'd like to know what's happening in the world
+      - what are the top news stories today?
+      - tell me about any breaking news
+      - give me a summary of the news
+      - what's the current news cycle?
+      - can you provide updates on global events?
+      - tell me about any major developments
+      - i'm interested in reading news articles
+      - what's making headlines in the news industry?
+
+- intent: category_news
+  examples: |
+      - what's the latest in [sports](category)?
+      - i need updates on [technology](category) news
+      - give me the top [business](category) stories
+      - any recent [political](category) developments?
+      - tell me about [entertainment](category) news
+      - give me the latest on [stock market](category) trends and [financial](category) news
+      - what are the top [business](category) stories related to [renewable energy](category)?
+      - any recent [political](category) developments regarding [healthcare](category) reform?
+      - tell me about the latest updates on the upcoming elections
+      - i'm interested in news about [international](category) [diplomacy](category) and [conflicts](category)
+      - what's the latest news about [hollywood celebrities](category)?
+      - can you give me updates on upcoming [movie](category) releases and [film festivals](category)?
+
+# TODO espandi il più possibile
+- intent: topic_news
+  examples: |
+      - Can you provide updates on [wildfires](category) in [California](place)?
+      - What's the latest news on [environmental](category) policies in [China](place)?
+      - Give me updates on [Google](organization) privacy policies
+      - I'm interested in news about [asian](place) [economy](category) and industries
+      - how many goals [ac milan](organization) scored
+      - what happened in [Rome](place) tonight
+      - tell me about [Sergio mattarella](people) latest news
+      - news about [U2](organization) [concerts](category)
+      - Any news about [Elon Musk](people)?
+
+- intent: source_news
+  examples: |
+      - What's the latest from [BBC News](source)?
+      - Give me news articles from [CNN](source).
+      - Can you provide updates from [The New York Times](source)?
+      - Tell me about the latest from [Reuters](source).
+      - I'm interested in news from [The Guardian](source).
+      - "What's the most recent update from [BBC News](source)?
+      - Could you share news stories from [CNN](source)?
+      - Do you have any updates from [The New York Times](source)
+      - Please inform me about the latest news from [Reuters](source)
+      - I'd like to stay informed with news from [The Guardian](source)
+
+
+# ------------------------------------------------
+#             = = = UTILITIES = = =
+# ------------------------------------------------
+
+# url dont work
+- intent: url_malfunction
+  examples: |
+      - it doesn't work
+      - url does not open
+      - its broken
+      - i can't open the link
+      - provided link does not work
+      - i cant read this article
+      - this site does not exist-
+
+# i want some more
+- intent: repeat
+  examples: |
+      -  i want some more
+      - do this one more time
+      - repeat action
+      - i want to read more about this
+      - can you please do that again?
+      - Could you kindly repeat the action for me?
+      - again.
+      - please show me other news
+      - i still want to read
+
+# Ask for informations about source or authors
+- intent: info_author
+  examples: |
+    - who is [Thomas Friedman](author_name)
+    - who wrote this article?
+    - i want to know more about the author af this article
+    - please show me some info about the writer of the last article you showed me
+    - Could you provide news or updates about the author of this article?
+
+- intent: info_source
+  examples: |
+    - Do you know something about [The New York Times](source_name)?
+    - Let me know about [BBC News](source_name)
+    - i want to know more about the source af this article
+    - please show me some info about the newspaper of the last article you showed me
+    - Could you provide news or updates about the site?
+    - where this article is published?
+
+# * ==============================  ================ *
+#  https://rasa.com/blog/enhancing-rasa-nlu-with-custom-components/
+#  Meglio con sentiment analysis, aggiunfìgo un componente esterno per valutazione feedback
+
+# likes the article
+- intent: good_feedback
+  examples: |
+      - very good
+      - fantastic
+      - I like this author
+      - Very interesting
+      - thank you
+      - This site is very good
+
+# dislikes the article
+- intent: bad_feedback
+  examples: |
+      - i didnt like it
+      - its bad
+      - Don't send me more article from this source
+      - i dont want to read about this
+      - i am not interested in [politics](category)
+      - leave me alone
+# * ============================================== *
+
+
+
+# ------------------------------------------------
+#             = = = DEFAULT = = =
+# ------------------------------------------------
+- intent: mood_great
+  examples: |
+    - perfect
+    - great
+    - amazing
+    - feeling like a king
+    - wonderful
+    - I am feeling very good
+    - I am great
+    - I am amazing
+    - I am going to save the world
+    - super stoked
+    - extremely good
+    - so so perfect
+    - so good
+    - so perfect
+
+- intent: mood_unhappy
+  examples: |
+    - my day was horrible
+    - I am sad
+    - I don't feel very well
+    - I am disappointed
+    - super sad
+    - I'm so sad
+    - sad
+    - very sad
+    - unhappy
+    - not good
+    - not very good
+    - extremly sad
+    - so saad
+    - so sad
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to a human?
