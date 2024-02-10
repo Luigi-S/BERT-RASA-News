@@ -1,0 +1,242 @@
+version: "3.1"
+
+config:
+    store_entities_as_slots: true
+session_config:
+    session_expiration_time: 60
+    carry_over_slots_to_new_session: true
+
+intents:
+  - start
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - stop
+
+  - weather:
+      use_entities:
+        - where
+        - when
+
+  - weather_no_place
+  - news_categories
+  - cat_sel
+  - search_news
+  - news_from_source
+  - hottest_news
+
+  - generic_news
+  - category_news:
+      use_entities:
+        - category
+
+  - topic_news:
+      use_entities:
+        - category
+        - place
+        - organization
+        - people
+
+  - source_news:
+      use_entities:
+        - source
+
+  - all_news:
+      use_entities:
+        - category
+        - place
+        - organization
+        - people
+        - source
+
+  - url_malfunction
+  - repeat
+
+  - info_author:
+      use_entities:
+        - author
+
+  - info_source:
+      use_entities:
+        - source
+
+  - good_feedback
+  - bad_feedback
+
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+
+
+
+actions:
+  - action_hottest_news
+
+  - action_query_news
+
+  - action_weather
+  - action_more_weather
+
+  - action_category_news
+  - action_category_more
+  - action_source_news
+  - action_source_more
+  - action_topics_news
+  - action_topics_more
+
+  - action_info_author
+  - action_info_source
+
+  - action_broken_link
+  - action_bad_feed
+  - action_good_feed
+
+  - action_utter_start
+  - action_category_choice
+
+  - utter_weather_form
+  - utter_source_form
+  - utter_goodbye
+  - utter_submit
+  - utter_ask_continue
+
+
+
+entities:
+  - where
+  - when
+  - category
+  - place
+  - organization
+  - people
+  - source
+  - author
+
+
+slots:
+  when:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: when
+      - type: from_intent
+        intent: stop
+        value: none
+        conditions:
+          - active_loop: weather_form
+            requested_slot: when
+      - type: from_text
+        not_intent: stop
+        conditions:
+          - active_loop: weather_form
+            requested_slot: when
+  where:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: where
+      - type: from_intent
+        intent: stop
+        value: none
+        conditions:
+        - active_loop: weather_form
+          requested_slot: where
+      - type: from_text
+        not_intent: stop
+        conditions:
+        - active_loop: weather_form
+          requested_slot: where
+
+  source:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: source
+      - type: from_intent
+        intent: stop
+        value: none
+        conditions:
+          - active_loop: source_form
+            requested_slot: source
+      - type: from_text
+        not_intent: stop
+        conditions:
+          - active_loop: source_form
+            requested_slot: source
+  category:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: category
+  people:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: people
+  place:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: place
+  author:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: author
+  organization:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: organization
+
+  cat_page:
+    type: any
+    mappings:
+      - type: custom
+  src_page:
+    type: any
+    mappings:
+      - type: custom
+  topics_page:
+    type: any
+    mappings:
+      - type: custom
+  topics:
+    type: any
+    mappings:
+      - type: custom
+
+
+
+
+forms:
+  weather_form:
+    required_slots:
+      - where
+      - when
+  source_form:
+    required_slots:
+      - source
+
+
+
+
+responses:
+  utter_goodbye:
+    - text: "QUESTO è QUANTO :)"
+
+  utter_source_form:
+    - text: "Please, send me the name of the source"
+
+  utter_weather_form:
+    - text: "Of what location and at what time are you interested in the weather forecast?"
+
+  utter_submit:
+    - text: "Thanks for your input, i'm processing your request..."
+
+  utter_ask_continue:
+    - text: Are you sure you want to stop the form?

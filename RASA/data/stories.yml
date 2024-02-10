@@ -1,0 +1,237 @@
+version: "3.1"
+
+stories:
+
+
+# - - - Greet & START - - -
+- story: Greet and start
+  steps:
+    - intent: greet
+    - action: action_utter_start
+
+- story: Just some news
+  steps:
+    - intent: generic_news
+    - action: action_hottest_news
+    # - intent: repeat
+    # TODO
+    # - action: search_form
+    # - action: search_news
+
+# ----------------------------------------------
+#        =#= ASK FOR NEWS =#=
+#  casi: category, source, topic
+#  per ogni caso:
+#  attivazione da button
+#  repeat
+#  deny -> utter_start
+#   == 9 casistiche corrette!
+#  todo Caso strano, in cui a more? risponde con domanda diversa
+# ----------------------------------------------
+
+# CASE 1: weather
+- story: weather_button
+  steps:
+    - action: action_utter_start
+    - intent: weather_no_place
+    - action: utter_weather_form
+    - action: weather_form
+    - active_loop: null
+    - action: utter_submit
+    - action: action_weather
+
+- story: weather from intent
+  steps:
+    - intent: weather
+    - action: action_weather
+
+# CASE 2: category
+- story: categories_button_business no follow up
+  steps:
+    - action: action_utter_start
+    - intent: news_categories
+    - action: action_category_choice
+    - intent: cat_sel
+    - slot_was_set:
+        - category: business
+    - action: action_category_news
+    - intent: deny
+    - action: action_utter_start
+
+- story: category_news with follow up
+  steps:
+    - action: action_category_news
+    - slot_was_set:
+        - category: technology
+    - intent: repeat
+    - action: action_category_more
+    - intent: affirm
+    - action: action_category_more
+    - intent: affirm
+    - action: action_category_more
+    - intent: url_malfunction
+    - action: action_broken_link
+    - action: action_utter_start
+
+
+- story: intent for category news
+  steps:
+    - intent: category_news
+    - slot_was_set:
+      - category: politics
+    - action: action_category_news
+
+# CASE 3: Source
+- story: source_button no follow up
+  steps:
+    - action: action_utter_start
+    - intent: news_from_source
+    - action: utter_source_form
+    - action: source_form
+    - active_loop: null
+    - action: utter_submit
+    - action: action_source_news
+    - intent: deny
+    - action: action_utter_start
+
+- story: source_news with follow up
+  steps:
+    - action: action_source_news
+    - slot_was_set:
+        - source: CNN
+    - action: action_source_news
+    - intent: affirm
+    - action: action_source_more
+    - intent: repeat
+    - action: action_source_more
+
+- story: intent for source news
+  steps:
+    - intent: source_news
+    - slot_was_set:
+      - source: Huff Post
+    - action: action_source_news
+    - intent: repeat
+    - action: action_source_more
+    - intent: deny
+    - action: action_utter_start
+
+# CASE 4: Topics
+- story: topics no follow up
+  steps:
+    - intent: topic_news
+    - slot_was_set:
+      - category: sports
+    - slot_was_set:
+      - organization: ac milan
+    - action: action_topics_news
+    - intent: deny
+    - action: action_utter_start
+
+- story: source_news with follow up
+  steps:
+    - intent: topic_news
+    - slot_was_set:
+      - place: italy
+    - slot_was_set:
+      - people: sergio mattarella
+
+    - action: action_topics_news
+    - intent: repeat
+    - action: action_topics_more
+
+- story: another source_news with follow up
+  steps:
+    - intent: topic_news
+    - slot_was_set:
+      - people: elon musk
+    - slot_was_set:
+      - people: jeff bezos
+
+    - action: action_topics_news
+    - intent: affirm
+    - action: action_topics_more
+
+# custom random stories
+# reading about your favourite topics
+- story: good morning with JournAI
+  steps:
+    - action: action_utter_start
+    - intent: generic_news
+    - action: action_hottest_news
+    - intent: weather
+    - slot_was_set:
+      - where: Malibu
+    - slot_was_set:
+      - when: false
+    - action: action_weather
+    - intent: topic_news
+    - slot_was_set:
+      - people: donald trump
+    - slot_was_set:
+      - category: business
+    - action: action_topics_news
+    - intent: affirm
+    - action: action_topics_more
+    - intent: deny
+    - action: action_utter_start
+    - intent: goodbye
+    - action: utter_goodbye
+
+- story: reading about your favourite topics
+  steps:
+    - action: action_utter_start
+    - intent: news_from_source
+    - action: utter_source_form
+    - action: source_form
+    - active_loop: null
+    - action: utter_submit
+    - action: action_source_news
+    - intent: category_news
+    - slot_was_set:
+      - category: technology
+    - action: action_category_news
+    - intent: deny
+    - action: action_utter_start
+
+    - intent: news_categories
+    - action: action_category_choice
+    - intent: cat_sel
+    - slot_was_set:
+      - category: technology
+    - action: action_category_news
+
+    - intent: url_malfunction
+    - action: action_broken_link
+    - action: action_utter_start
+
+
+- story: User interrupts the weather form and doesn't want to continue
+  steps:
+  - intent: weather_no_place
+  - action: utter_weather_form
+  - action: weather_form
+  - active_loop: weather_form
+  - intent: stop
+  - action: utter_ask_continue
+  - or:
+    - intent: stop
+    - intent: affirm
+  - action: action_deactivate_loop
+  - active_loop: null
+  - action: action_utter_start
+
+- story: User interrupts the source form and doesn't want to continue
+  steps:
+  - intent: news_from_source
+  - action: utter_source_form
+  - action: source_form
+  - active_loop: source_form
+  - intent: stop
+  - action: utter_ask_continue
+  - or:
+    - intent: stop
+    - intent: affirm
+  - action: action_deactivate_loop
+  - active_loop: null
+  - action: action_utter_start

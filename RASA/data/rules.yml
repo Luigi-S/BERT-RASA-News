@@ -1,0 +1,119 @@
+version: "3.1"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: Starting sequence
+  steps:
+    - intent: greet
+    - action: action_utter_start
+
+- rule: starting well
+  steps:
+    - intent: start
+    - action: action_utter_start
+
+# -----------------------------------------
+#       - * - Weather Forecast - * -
+# -----------------------------------------
+- rule: Weather forecast
+  steps:
+  - intent: weather
+  - action: action_weather
+
+- rule: Weather forecast Button pressed
+  steps:
+  - intent: weather_no_place
+  - action: utter_weather_form
+  - action: weather_form
+  - active_loop: weather_form
+
+
+# -----------------------------------------
+#       - * - Asking for News - * -
+# -----------------------------------------
+- rule: Ask for generic news
+  steps:
+    - intent: generic_news
+    - action: action_hottest_news
+
+# -----------------------------------------
+#           - * - Buttons - * -
+# -----------------------------------------
+- rule: News Categories Button pressed
+  steps:
+    - intent: news_categories
+    - action: action_category_choice
+
+- rule: News from Source Button pressed
+  steps:
+  - intent: news_from_source
+  - action: utter_source_form
+  - action: source_form
+  - active_loop: source_form
+
+- rule: Headlines Button pressed
+  steps:
+    - intent: hottest_news
+    - action: action_hottest_news
+
+# todo search news button
+
+# -----------------------------------------
+#          - * - FeedBacks - * -
+# -----------------------------------------
+- rule: Bad Feedback
+  steps:
+    - intent: bad_feedback
+    - action: action_bad_feed
+    - action: action_utter_start
+
+- rule: Good Feedback
+  steps:
+    - intent: good_feedback
+    - action: action_good_feed
+    - action: action_utter_start
+
+- rule: Link malfunction reported
+  steps:
+    - intent: url_malfunction
+    - action: action_broken_link
+    - action: action_utter_start
+
+
+# -----------------------------------------
+#         - * - Forms - * -
+# -----------------------------------------
+- rule: activate Source Form
+  steps:
+  - action: source_form
+  - active_loop: source_form
+
+- rule: Submit Source Form
+  condition:
+  - active_loop: source_form
+  steps:
+  - action: source_form
+  - active_loop: null
+  - action: utter_submit
+  - action: action_source_news
+
+- rule: activate weather form
+  steps:
+  - action: weather_form
+  - active_loop: weather_form
+
+- rule: Submit Weather Form
+  condition:
+  - active_loop: weather_form
+  steps:
+  - action: weather_form
+  - active_loop: null
+  - action: utter_submit
+  - action: action_weather
+
+

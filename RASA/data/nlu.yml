@@ -17,6 +17,14 @@ nlu:
     - goodevening
     - good afternoon
 
+- intent: stop
+  examples: |
+    - stop
+    - nevermind
+    - please stop
+    - i want to stop
+    - stop the form
+
 - intent: goodbye
   examples: |
     - cu
@@ -52,26 +60,12 @@ nlu:
 # ------------------------------------------------
 #             = = = WEATHER = = =
 # ------------------------------------------------
-
-- intent: weather_no_place
-  examples: |
-      - what's the weather like [today](when)?
-      - can you tell me the forecast for [tomorrow](when)?
-      - i need to know if it will rain [on the 12th](when)
-      - what's the temperature?
-      - is it going to be sunny in the [afternoon](when)?
-      - tell me about the weather
-      - will it snow [next week](when)?
-      - can you give me the weather report for [thursday](when)?
-      - is there a chance of thunderstorms?
-      - i'm planning an outdoor event, should i expect rain
-
 - intent: weather
   examples: |
       - what's the weather in [nebraska](where) going to be like for the [next few days](when)?
       - can you provide a detailed weather forecast for [this week](when) in [Naples](where)?
       - i'm traveling to [miami](where) [next month](when), what's the climate like there?
-      - what's the uv index for [today](when) in [Paris]?
+      - what's the uv index for [today](when) in [Paris])(where)?
       - im in [greece](where), will it be windy [this evening](when)?
       - is there a chance of fog [in the morning](where)?
       - can you give me an overview of the weather conditions in [europe](where)?
@@ -113,15 +107,15 @@ nlu:
 # TODO espandi il più possibile
 - intent: topic_news
   examples: |
-      - Can you provide updates on [wildfires](category) in [California](place)?
+      - Can you provide updates on [wildfires](category) in [California](place) and [Florida](place)?
       - What's the latest news on [environmental](category) policies in [China](place)?
-      - Give me updates on [Google](organization) privacy policies
+      - Give me updates on [Google](organization), [Facebook](organization) and [TikTok](organization) privacy policies
       - I'm interested in news about [asian](place) [economy](category) and industries
-      - how many goals [ac milan](organization) scored
+      - how many goals [ac milan](organization) scored against [juventus](organization)
       - what happened in [Rome](place) tonight
-      - tell me about [Sergio mattarella](people) latest news
-      - news about [U2](organization) [concerts](category)
-      - Any news about [Elon Musk](people)?
+      - tell me about [Sergio mattarella](people) and [Italy](place) latest news
+      - news about [U2](organization) [concerts](category) in [Mexico](place)
+      - Any news about [Elon Musk](people) and [Jeff Bezos](people) ?
 
 - intent: source_news
   examples: |
@@ -253,3 +247,442 @@ nlu:
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+
+- lookup: place
+  examples: |
+    - Afghanistan
+    - Kabul
+    - Kandahar
+    - Herat
+    - Mazar-i-Sharif
+    - Albania
+    - Tirana
+    - Durrës
+    - Vlorë
+    - Shkodër
+    - Algeria
+    - Algiers
+    - Oran
+    - Constantine
+    - Annaba
+    - Andorra
+    - Andorra la Vella
+    - Escaldes-Engordany
+    - Angola
+    - Luanda
+    - Huambo
+    - Lobito
+    - Benguela
+    - Antigua and Barbuda
+    - Saint John's
+    - Argentina
+    - Buenos Aires
+    - Córdoba
+    - Rosario
+    - Mendoza
+    - Armenia
+    - Yerevan
+    - Gyumri
+    - Vanadzor
+    - Australia
+    - Sydney
+    - Melbourne
+    - Brisbane
+    - Perth
+    - Austria
+    - Vienna
+    - Graz
+    - Linz
+    - Salzburg
+    - Azerbaijan
+    - Baku
+    - Ganja
+    - Sumqayit
+    - Mingachevir
+    - Bahamas
+    - Nassau
+    - Freeport
+    - Bahrain
+    - Manama
+    - Bangladesh
+    - Dhaka
+    - Chittagong
+    - Khulna
+    - Barbados
+    - Bridgetown
+    - Belarus
+    - Minsk
+    - Gomel
+    - Mogilev
+    - Belgium
+    - Brussels
+    - Antwerp
+    - Ghent
+    - Bruges
+    - Belize
+    - Belmopan
+    - Belize City
+    - Benin
+    - Porto-Novo
+    - Cotonou
+    - Bhutan
+    - Thimphu
+    - Phuntsholing
+    - Bolivia
+    - Sucre
+    - La Paz
+    - Santa Cruz de la Sierra
+    - Bosnia and Herzegovina
+    - Sarajevo
+    - Banja Luka
+    - Tuzla
+    - Botswana
+    - Gaborone
+    - Francistown
+    - Brazil
+    - Brasília
+    - São Paulo
+    - Rio de Janeiro
+    - Salvador
+    - Brunei
+    - Bandar Seri Begawan
+    - Bulgaria
+    - Sofia
+    - Plovdiv
+    - Varna
+    - Burkina Faso
+    - Ouagadougou
+    - Bobo-Dioulasso
+    - Burundi
+    - Bujumbura
+    - Cambodia
+    - Phnom Penh
+    - Cameroon
+    - Yaoundé
+    - Douala
+    - Canada
+    - Ottawa
+    - Toronto
+    - Montreal
+    - Vancouver
+    - Cape Verde
+    - Praia
+    - Central African Republic
+    - Bangui
+    - Chad
+    - N'Djamena
+    - Chile
+    - Santiago
+    - Valparaíso
+    - Concepción
+    - China
+    - Beijing
+    - Shanghai
+    - Guangzhou
+    - Shenzhen
+    - Colombia
+    - Bogotá
+    - Medellín
+    - Cali
+    - Barranquilla
+    - Comoros
+    - Moroni
+    - Congo (Congo-Brazzaville)
+    - Brazzaville
+    - Costa Rica
+    - San José
+    - Croatia
+    - Zagreb
+    - Split
+    - Rijeka
+    - Cuba
+    - Havana
+    - Cyprus
+    - Nicosia
+    - Czech Republic
+    - Prague
+    - Brno
+    - Ostrava
+    - Democratic Republic of the Congo (Congo-Kinshasa)
+    - Kinshasa
+    - Lubumbashi
+    - Denmark
+    - Copenhagen
+    - Aarhus
+    - Djibouti
+    - Djibouti City
+    - Dominica
+    - Roseau
+    - Dominican Republic
+    - Santo Domingo
+    - East Timor (Timor-Leste)
+    - Dili
+    - Ecuador
+    - Quito
+    - Guayaquil
+    - Egypt
+    - Cairo
+    - Alexandria
+    - Giza
+    - El Salvador
+    - San Salvador
+    - Equatorial Guinea
+    - Malabo
+    - Bata
+    - Eritrea
+    - Asmara
+    - Estonia
+    - Tallinn
+    - Tartu
+    - Eswatini (fmr. "Swaziland")
+    - Mbabane
+    - Manzini
+    - Ethiopia
+    - Addis Ababa
+    - Dire Dawa
+    - Fiji
+    - Suva
+    - Lautoka
+    - Finland
+    - Helsinki
+    - Espoo
+    - Tampere
+    - Vantaa
+    - France
+    - Paris
+    - Marseille
+    - Lyon
+    - Toulouse
+    - Gabon
+    - Libreville
+    - Gambia
+    - Banjul
+    - Georgia
+    - Tbilisi
+    - Kutaisi
+    - Germany
+    - Berlin
+    - Hamburg
+    - Munich
+    - Cologne
+    - Ghana
+
+
+- lookup: where
+  examples: |
+    - Afghanistan
+    - Kabul
+    - Kandahar
+    - Herat
+    - Mazar-i-Sharif
+    - Albania
+    - Tirana
+    - Durrës
+    - Vlorë
+    - Shkodër
+    - Algeria
+    - Algiers
+    - Oran
+    - Constantine
+    - Annaba
+    - Andorra
+    - Andorra la Vella
+    - Escaldes-Engordany
+    - Angola
+    - Luanda
+    - Huambo
+    - Lobito
+    - Benguela
+    - Antigua and Barbuda
+    - Saint John's
+    - Argentina
+    - Buenos Aires
+    - Córdoba
+    - Rosario
+    - Mendoza
+    - Armenia
+    - Yerevan
+    - Gyumri
+    - Vanadzor
+    - Australia
+    - Sydney
+    - Melbourne
+    - Brisbane
+    - Perth
+    - Austria
+    - Vienna
+    - Graz
+    - Linz
+    - Salzburg
+    - Azerbaijan
+    - Baku
+    - Ganja
+    - Sumqayit
+    - Mingachevir
+    - Bahamas
+    - Nassau
+    - Freeport
+    - Bahrain
+    - Manama
+    - Bangladesh
+    - Dhaka
+    - Chittagong
+    - Khulna
+    - Barbados
+    - Bridgetown
+    - Belarus
+    - Minsk
+    - Gomel
+    - Mogilev
+    - Belgium
+    - Brussels
+    - Antwerp
+    - Ghent
+    - Bruges
+    - Belize
+    - Belmopan
+    - Belize City
+    - Benin
+    - Porto-Novo
+    - Cotonou
+    - Bhutan
+    - Thimphu
+    - Phuntsholing
+    - Bolivia
+    - Sucre
+    - La Paz
+    - Santa Cruz de la Sierra
+    - Bosnia and Herzegovina
+    - Sarajevo
+    - Banja Luka
+    - Tuzla
+    - Botswana
+    - Gaborone
+    - Francistown
+    - Brazil
+    - Brasília
+    - São Paulo
+    - Rio de Janeiro
+    - Salvador
+    - Brunei
+    - Bandar Seri Begawan
+    - Bulgaria
+    - Sofia
+    - Plovdiv
+    - Varna
+    - Burkina Faso
+    - Ouagadougou
+    - Bobo-Dioulasso
+    - Burundi
+    - Bujumbura
+    - Cambodia
+    - Phnom Penh
+    - Cameroon
+    - Yaoundé
+    - Douala
+    - Canada
+    - Ottawa
+    - Toronto
+    - Montreal
+    - Vancouver
+    - Cape Verde
+    - Praia
+    - Central African Republic
+    - Bangui
+    - Chad
+    - N'Djamena
+    - Chile
+    - Santiago
+    - Valparaíso
+    - Concepción
+    - China
+    - Beijing
+    - Shanghai
+    - Guangzhou
+    - Shenzhen
+    - Colombia
+    - Bogotá
+    - Medellín
+    - Cali
+    - Barranquilla
+    - Comoros
+    - Moroni
+    - Congo (Congo-Brazzaville)
+    - Brazzaville
+    - Costa Rica
+    - San José
+    - Croatia
+    - Zagreb
+    - Split
+    - Rijeka
+    - Cuba
+    - Havana
+    - Cyprus
+    - Nicosia
+    - Czech Republic
+    - Prague
+    - Brno
+    - Ostrava
+    - Democratic Republic of the Congo (Congo-Kinshasa)
+    - Kinshasa
+    - Lubumbashi
+    - Denmark
+    - Copenhagen
+    - Aarhus
+    - Djibouti
+    - Djibouti City
+    - Dominica
+    - Roseau
+    - Dominican Republic
+    - Santo Domingo
+    - East Timor (Timor-Leste)
+    - Dili
+    - Ecuador
+    - Quito
+    - Guayaquil
+    - Egypt
+    - Cairo
+    - Alexandria
+    - Giza
+    - El Salvador
+    - San Salvador
+    - Equatorial Guinea
+    - Malabo
+    - Bata
+    - Eritrea
+    - Asmara
+    - Estonia
+    - Tallinn
+    - Tartu
+    - Eswatini (fmr. "Swaziland")
+    - Mbabane
+    - Manzini
+    - Ethiopia
+    - Addis Ababa
+    - Dire Dawa
+    - Fiji
+    - Suva
+    - Lautoka
+    - Finland
+    - Helsinki
+    - Espoo
+    - Tampere
+    - Vantaa
+    - France
+    - Paris
+    - Marseille
+    - Lyon
+    - Toulouse
+    - Gabon
+    - Libreville
+    - Gambia
+    - Banjul
+    - Georgia
+    - Tbilisi
+    - Kutaisi
+    - Germany
+    - Berlin
+    - Hamburg
+    - Munich
+    - Cologne
+    - Ghana
