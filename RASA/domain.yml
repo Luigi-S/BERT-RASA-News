@@ -17,12 +17,11 @@ intents:
   - weather:
       use_entities:
         - where
-        - when
+        - time
 
   - weather_no_place
   - news_categories
   - cat_sel
-  - search_news
   - news_from_source
   - hottest_news
 
@@ -40,14 +39,6 @@ intents:
 
   - source_news:
       use_entities:
-        - source
-
-  - all_news:
-      use_entities:
-        - category
-        - place
-        - organization
-        - people
         - source
 
   - url_malfunction
@@ -73,8 +64,6 @@ intents:
 actions:
   - action_hottest_news
 
-  - action_query_news
-
   - action_weather
   - action_more_weather
 
@@ -87,6 +76,8 @@ actions:
 
   - action_info_author
   - action_info_source
+
+  - action_repeat
 
   - action_broken_link
   - action_bad_feed
@@ -101,11 +92,13 @@ actions:
   - utter_submit
   - utter_ask_continue
 
+  - validate_weather_form
+
 
 
 entities:
   - where
-  - when
+  - time
   - category
   - place
   - organization
@@ -115,23 +108,23 @@ entities:
 
 
 slots:
-  when:
+  time:
     type: text
     influence_conversation: false
     mappings:
       - type: from_entity
-        entity: when
+        entity: time
       - type: from_intent
         intent: stop
         value: none
         conditions:
           - active_loop: weather_form
-            requested_slot: when
+            requested_slot: time
       - type: from_text
         not_intent: stop
         conditions:
           - active_loop: weather_form
-            requested_slot: when
+            requested_slot: time
   where:
     type: text
     influence_conversation: false
@@ -217,7 +210,7 @@ forms:
   weather_form:
     required_slots:
       - where
-      - when
+      - time
   source_form:
     required_slots:
       - source
@@ -233,10 +226,16 @@ responses:
     - text: "Please, send me the name of the source"
 
   utter_weather_form:
-    - text: "Of what location and at what time are you interested in the weather forecast?"
+    - text: "Please send a message, where?"
 
   utter_submit:
     - text: "Thanks for your input, i'm processing your request..."
 
   utter_ask_continue:
-    - text: Are you sure you want to stop the form?
+    - text: "Are you sure you want to stop the form?"
+
+  utter_default:
+    - buttons:
+      - payload: /start
+        title: Main Menu
+      text: "I'm sorry, I didn't quite get you? Please try again.."

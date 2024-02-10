@@ -117,3 +117,7 @@ rules:
   - action: action_weather
 
 
+- rule: ask about source
+  steps:
+    - intent: info_source
+    - action: action_info_source

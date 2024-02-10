@@ -78,12 +78,25 @@ def get_weather():
         return "BadRequest", 400
 
 
+@app.route('/info/source', methods=['GET'])
+def get_source_info():
+    try:
+        request_data = request.headers
+        if is_valid_key(request_data['apikey']):
+            source = request_data['source']
+            return jsonify({"source": source}), 200
+        else:
+            return "Unauthourized", 401
+    except Exception as e:
+        print(e.args)
+        return "BadRequest", 400
+
 @app.route('/hottest', methods=['GET'])
 def get_hottest():
     try:
         request_data = request.headers
         if is_valid_key(request_data['apikey']):
-            return jsonify([ARTICLE for i in range(2)]), 200
+            return jsonify({}), 200
         else:
             return "Unauthourized", 401
     except Exception as e:

@@ -13,10 +13,6 @@ stories:
   steps:
     - intent: generic_news
     - action: action_hottest_news
-    # - intent: repeat
-    # TODO
-    # - action: search_form
-    # - action: search_news
 
 # ----------------------------------------------
 #        =#= ASK FOR NEWS =#=
@@ -26,7 +22,6 @@ stories:
 #  repeat
 #  deny -> utter_start
 #   == 9 casistiche corrette!
-#  todo Caso strano, in cui a more? risponde con domanda diversa
 # ----------------------------------------------
 
 # CASE 1: weather
@@ -36,9 +31,38 @@ stories:
     - intent: weather_no_place
     - action: utter_weather_form
     - action: weather_form
+    - active_loop: weather_form
+    - slot_was_set:
+      - requested_slot: where
+    - slot_was_set:
+      - where: munich
+    - slot_was_set:
+      - where: cologne
+    - slot_was_set:
+      - requested_slot: time
+    - slot_was_set:
+      - time: now
+    - slot_was_set:
+      - time: tomorrow
+    - slot_was_set:
+      - requested_slot: time
+    - slot_was_set:
+      - time: today
+    - slot_was_set:
+      - time: null
+    - slot_was_set:
+      - requested_slot: time
+    - slot_was_set:
+      - time: now
+    - slot_was_set:
+      - time: tomorrow
+    - slot_was_set:
+      - requested_slot: null
     - active_loop: null
     - action: utter_submit
     - action: action_weather
+    - intent: repeat
+    - action: action_repeat
 
 - story: weather from intent
   steps:
@@ -57,6 +81,8 @@ stories:
     - action: action_category_news
     - intent: deny
     - action: action_utter_start
+    - intent: repeat
+    - action: action_repeat
 
 - story: category_news with follow up
   steps:
@@ -100,7 +126,7 @@ stories:
     - slot_was_set:
         - source: CNN
     - action: action_source_news
-    - intent: affirm
+    - intent: repeat
     - action: action_source_more
     - intent: repeat
     - action: action_source_more
@@ -111,7 +137,7 @@ stories:
     - slot_was_set:
       - source: Huff Post
     - action: action_source_news
-    - intent: repeat
+    - intent: affirm
     - action: action_source_more
     - intent: deny
     - action: action_utter_start
@@ -135,7 +161,6 @@ stories:
       - place: italy
     - slot_was_set:
       - people: sergio mattarella
-
     - action: action_topics_news
     - intent: repeat
     - action: action_topics_more
@@ -163,7 +188,7 @@ stories:
     - slot_was_set:
       - where: Malibu
     - slot_was_set:
-      - when: false
+      - time: false
     - action: action_weather
     - intent: topic_news
     - slot_was_set:

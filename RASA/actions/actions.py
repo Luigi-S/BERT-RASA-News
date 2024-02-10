@@ -9,7 +9,7 @@ from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker, FormValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
-from rasa_sdk.events import SlotSet, AllSlotsReset
+from rasa_sdk.events import SlotSet, AllSlotsReset, UserUtteranceReverted
 
 
 import requests
@@ -133,24 +133,6 @@ class ActionHottestNews(Action):
         return []
 
 
-class ActionQueryNews(Action):
-    def name(self) -> Text:
-        return "action_query_news"
-
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        # TODO
-        # FORM!
-        # query a server per una notizia + TOPIC, CATEGORY, AUTHOR, SOURCE, WHEN-> ANNO/MESE
-
-        # SORRY O PLOT_LIST
-        dispatcher.utter_message(text="...SORRY O LIST")
-        # nuovo FORM
-        dispatcher.utter_message(text="...FORM")
-        return []
-
-
 #    - - - WEATHER - - -
 class ActionWeather(Action):
     def name(self) -> Text:
@@ -160,9 +142,10 @@ class ActionWeather(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         where = tracker.get_slot('where') #get_entity_values(tracker.latest_message, 'where')
-        when = tracker.get_slot('when')   # get_entity_values(tracker.latest_message, 'when')
+        when = tracker.get_slot('time')   # get_entity_values(tracker.latest_message, 'when')
         if where is not None:
             if when is not None:
+                print(f"IL TEMPO RICHIESTO è : {when}")
                 response = queryServer(URL + '/weather', {'where': where, 'when': when})
             else:
                 response = queryServer(URL + '/weather', {
@@ -173,7 +156,7 @@ class ActionWeather(Action):
                 dispatcher.utter_message(text=f"The weather in {response['where']}")
                 dispatcher.utter_message(image=response['weather_icon'])
                 dispatcher.utter_message(text=response['weather_txt'])
-                return [SlotSet("when", when), SlotSet("where", where)]
+                return [SlotSet("time", when), SlotSet("time", where)]
             else:
                 dispatcher.utter_message(
                     text='Sorry I couldn\'t get the weather forecasts')  # TODO personalizza i sorry
@@ -207,15 +190,19 @@ class ActionCategoryNewsMore(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        category = tracker.get_slot('category')
-        page = tracker.get_slot('cat_page')+1
-        res = queryServer(URL+'/category', {"category": category, "page": str(page)})
-        print(f"RES: {res}")
-        dispatcher.utter_message(text=f"News: {res['category']}, page: {res['page']}")
-        plotArticleList(res['news'], dispatcher)
+        try:
+            category = tracker.get_slot('category')
+            page = tracker.get_slot('cat_page')+1
+            res = queryServer(URL+'/category', {"category": category, "page": str(page)})
+            print(f"RES: {res}")
+            dispatcher.utter_message(text=f"News: {res['category']}, page: {res['page']}")
+            plotArticleList(res['news'], dispatcher)
 
-        dispatcher.utter_message(text="...MORE?")
-        return [SlotSet("cat_page", page)]
+            dispatcher.utter_message(text="...MORE?")
+            return [SlotSet("cat_page", page)]
+        except Exception:
+            dispatcher.utter_message(text="...SORRY")
+            return[]
 
 
 #    - - - SOURCE - - -
@@ -242,14 +229,18 @@ class ActionSourceNewsMore(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        source = tracker.get_slot('source')
-        page = tracker.get_slot('src_page') + 1
-        res = queryServer(URL + '/source', {"source": source, "page": str(page)})
-        dispatcher.utter_message(text=f"News: {res['source']}, page: {res['page']}")
-        plotArticleList(res['news'], dispatcher)
+        try:
+            source = tracker.get_slot('source')
+            page = tracker.get_slot('src_page') + 1
+            res = queryServer(URL + '/source', {"source": source, "page": str(page)})
+            dispatcher.utter_message(text=f"News: {res['source']}, page: {res['page']}")
+            plotArticleList(res['news'], dispatcher)
 
-        dispatcher.utter_message(text="...MORE?")
-        return [SlotSet("src_page", page)]
+            dispatcher.utter_message(text="...MORE?")
+            return [SlotSet("src_page", page)]
+        except Exception:
+            dispatcher.utter_message(text="...SORRY")
+            return []
 
 
 #    - - - TOPICS - - -
@@ -286,33 +277,23 @@ class ActionTopicsNewsMore(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        topics = tracker.get_slot('topics')
-        page = tracker.get_slot('topics_page') + 1
-        res = queryServer(URL + '/topics', {"topics": str(topics), "page": str(page)})
+        try:
+            topics = tracker.get_slot('topics')
+            page = tracker.get_slot('topics_page') + 1
+            res = queryServer(URL + '/topics', {"topics": str(topics), "page": str(page)})
 
-        cat_res = "Generics" if 'category' not in res else res['category']
-        dispatcher.utter_message(text=f"News: {cat_res}, page: {res['page']}")
-        plotArticleList(res['news'], dispatcher)
+            cat_res = "Generics" if 'category' not in res else res['category']
+            dispatcher.utter_message(text=f"News: {cat_res}, page: {res['page']}")
+            plotArticleList(res['news'], dispatcher)
 
-        dispatcher.utter_message(text="...MORE?")
-        return [SlotSet("topics_page", page)]
+            dispatcher.utter_message(text="...MORE?")
+            return [SlotSet("topics_page", page)]
+        except Exception:
+            dispatcher.utter_message(text="...SORRY")
+            return[]
 
 
 #    - - - OTHER INFO - - -
-class ActionAuthorInfo(Action):
-    def name(self) -> Text:
-        return "action_info_author"
-
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        # TODO
-        # query a server per info su source
-        # ricevuta, null? YES -> sorry NO-> plot
-
-        dispatcher.utter_message(text="...SORRY O PLOT")
-        return []
-
 
 class ActionSourceInfo(Action):
     def name(self) -> Text:
@@ -321,11 +302,17 @@ class ActionSourceInfo(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        # TODO
-        # query a server per info su source
-        # ricevuta, null? YES -> sorry NO-> plot
-
-        dispatcher.utter_message(text="...SORRY O PLOT")
+        source = tracker.get_slot('source')
+        if source is not None:
+            res = queryServer(URL + '/info/source', {'source': source})
+            if res is not None:
+                dispatcher.utter_message(text=f"{res['source']} is a newspaper")
+                return [SlotSet("source", source)]
+            else:
+                dispatcher.utter_message(
+                    text='Sorry I couldn\'t get information about it')
+        else:
+            dispatcher.utter_message(text="...Sorry i didn't quite get what you want to know about")
         return []
 
 
@@ -382,32 +369,32 @@ class ActionBadFeed(Action):
 **================================================**
             =  =  =  VALIDATION  =  =  =                        
 **================================================**
-
+"""
 class ValidateWeatherForm(FormValidationAction):
-    # TODO PATTUME PURP
     def name(self) -> Text:
         return "validate_weather_form"
 
-    def validate_when(
+    async def validate_where(
         self,
         slot_value: Any,
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        #Validate when value.
-        try:
-            date_obj = datetime.strptime(slot_value, '%Y-%m-%d %H:%M:%S')
-            # Get the current datetime
-            current_datetime = datetime.now()
-            # Check if the datetime is in the future
-            if date_obj > current_datetime:
-                return {"when": slot_value}
-            else:
-                return {"when": None}
-        except ValueError:
-            return {"when": None}
-"""
+        # Perform any validation if needed
+        dispatcher.utter_message(text='Ok, and when?')
+        return {"where": slot_value}
+
+    async def validate_time(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        # TODO check date is in the future... convert in datetime
+        return {"time": slot_value}
+
 
 
 """
@@ -415,7 +402,8 @@ class ValidateWeatherForm(FormValidationAction):
         Buttons :>)
 ---------------------------------------
 """
-class ActionUtterStart (Action):
+
+class ActionUtterStart(Action):
     def name(self) -> Text:
         return "action_utter_start"
 
@@ -427,7 +415,6 @@ class ActionUtterStart (Action):
             {"payload": '/news_from_source', "title":  "News from specific source", "button_type":"vertical"},
             {"payload": '/news_categories', "title":  "News Categories", "button_type":"vertical"},
             {"payload": '/weather_no_place', "title": "Weather Forecast", "button_type": "vertical"},
-            {"payload": '/search_news', "title": "search News", "button_type": "vertical"},
         ]
         msg = "Hi! Welcome to the JournAI bot! To keep reading select one of the buttons or write a message!"
         dispatcher.utter_message(text=msg, buttons=buttons)
@@ -450,3 +437,43 @@ class ActionCategoryChoice(Action):
         msg = "Please, select one of the categories with these buttons"
         dispatcher.utter_message(text=msg, buttons=buttons)
         return []
+
+class ActionRepeat(Action):
+    def name(self) -> Text:
+        return "action_repeat"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        dispatcher.utter_message(text='...REPEAT ACTIVATED!')
+        user_ignore_count = 2
+        count = 0
+        tracker_list = []
+
+        while user_ignore_count > 0:
+            event = tracker.events[count].get('event')
+            if event == 'user':
+                user_ignore_count = user_ignore_count - 1
+            if event == 'bot':
+                tracker_list.append(tracker.events[count])
+            count = count - 1
+
+        i = len(tracker_list) - 1
+        while i >= 0:
+            data = tracker_list[i].get('data')
+            print(data)
+            if data:
+                if ("buttons" in data) and ("image" in data):
+                    dispatcher.utter_message(
+                        text=tracker_list[i].get('text'), buttons=data["buttons"], image=data["image"])
+                elif "buttons" in data:
+                    dispatcher.utter_message(text=tracker_list[i].get('text'), buttons=data["buttons"])
+                elif "images" in data:
+                    dispatcher.utter_message(text=tracker_list[i].get('text'), image=data["image"])
+                else:
+                    dispatcher.utter_message(text=tracker_list[i].get('text'))
+            i -= 1
+
+        return []
+
